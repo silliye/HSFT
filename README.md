@@ -30,34 +30,34 @@ sentencepiece==0.2.0 [optional for Baichuan2]   (在本项目不需要)
             └── Pixel8M.csv
         ``` 
 3. 下载 `User LLM`和`Item LLM`的预训练模型:
-    直接运行download_itemllm.py和download_userllm.py即可
+直接运行download_itemllm.py和download_userllm.py即可
     
 
 ## Item Caching
-    将Item先通过预训练的Item LLM生成对应的ITEM Embedding作为缓存。我们只进行UserLLM的微调，所以这里我们直接将生成的缓存作为数据集。
-    直接运行item_caching.py即可。
+将Item先通过预训练的Item LLM生成对应的ITEM Embedding作为缓存。我们只进行UserLLM的微调，所以这里我们直接将生成的缓存作为数据集。
+直接运行item_caching.py即可。
 
 ## DataSet
 
-    1. 这里已经将 `code/REC/data/dataset/trainset.py`和`code/REC/data/dataset/testset.py`新增了`CachedEmbeddingTrainDataset`和`CachedEmbeddingEvalDataset` 用于处理预计算好的Embedding缓存。
-    2. 同时更改collate_fn.py能够适配训练集/测试集，同时适配负采样。
+1. 这里已经将 `code/REC/data/dataset/trainset.py`和`code/REC/data/dataset/testset.py`新增了`CachedEmbeddingTrainDataset`和`CachedEmbeddingEvalDataset` 用于处理预计算好的Embedding缓存。
+2. 同时更改collate_fn.py能够适配训练集/测试集，同时适配负采样。
 
 ## Config and BUG
-    1. 配置都在`code/HLLM`和`code/overall`下的yaml文件中，可以自定义超参数
-    2. 根据硬件选择是否使用flash-attn以及一些QLora精度的选择
+1. 配置都在`code/HLLM`和`code/overall`下的yaml文件中，可以自定义超参数
+2. 根据硬件选择是否使用flash-attn以及一些QLora精度的选择
 
 ## Eval
-    可以直接测试Base UserLLM的效果
+可以直接测试Base UserLLM的效果
     
-    ```python
-    python code/main.py --config_file code/overall/LLM_ddp.yaml code/HLLM/HLLM.yaml --dataset Pixel200K --loss bce --use_item_cache True --item_cache_path dataset/pixel200k_item_embeddings.pt --user_pretrain_dir model_checkpoints/UserLLM_complete/ --item_pretrain_dir model_checkpoints/ItemLLM_complete/ --val_only True
-    ```
+```python
+python code/main.py --config_file code/overall/LLM_ddp.yaml code/HLLM/HLLM.yaml --dataset Pixel200K --loss bce --use_item_cache True --item_cache_path dataset/pixel200k_item_embeddings.pt --user_pretrain_dir model_checkpoints/UserLLM_complete/ --item_pretrain_dir model_checkpoints/ItemLLM_complete/ --val_only True
+```
 
 ## Fine-tuning
     在训练集上使用QLora微调
-    ```python
-    python code/main.py  --config_file code/overall/LLM_ddp.yaml code/HLLM/HLLM.yaml  --dataset Pixel200K  --loss bce  --use_item_cache True  --item_cache_path dataset/pixel200k_item_embeddings.pt  --user_pretrain_dir model_checkpoints/UserLLM_complete/ --use_qlora True
-    ```
+```python
+python code/main.py  --config_file code/overall/LLM_ddp.yaml code/HLLM/HLLM.yaml  --dataset Pixel200K  --loss bce  --use_item_cache True  --item_cache_path dataset/pixel200k_item_embeddings.pt  --user_pretrain_dir model_checkpoints/UserLLM_complete/ --use_qlora True
+```
 
 # Result
 
