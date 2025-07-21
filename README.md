@@ -54,7 +54,7 @@ python code/main.py --config_file code/overall/LLM_ddp.yaml code/HLLM/HLLM.yaml 
 ```
 
 ## Fine-tuning
-    在训练集上使用QLora微调
+在训练集上使用QLora微调
 ```python
 python code/main.py  --config_file code/overall/LLM_ddp.yaml code/HLLM/HLLM.yaml  --dataset Pixel200K  --loss bce  --use_item_cache True  --item_cache_path dataset/pixel200k_item_embeddings.pt  --user_pretrain_dir model_checkpoints/UserLLM_complete/ --use_qlora True
 ```
